@@ -8,11 +8,13 @@ import os
 import re
 import signal
 import subprocess
+from pathlib import Path
 from dataclasses import dataclass, field
 from urllib.parse import urlsplit
 
 
 CLAUDE_BIN = "/root/.local/bin/claude"
+PROJECT_DIR = Path(__file__).resolve().parent.parent
 LIMIT_MARKERS = ("usage limit", "rate limit", "limit reached", "hit your limit", "out of extra usage",
                  "out of usage")
 
@@ -100,8 +102,10 @@ def run_claude(prompt: str, timeout_s: int = 1500, claude_bin: str = CLAUDE_BIN)
            "--allowedTools", "WebSearch", "WebFetch",
            "--strict-mcp-config", "--no-session-persistence"]
     # Own process group, so a timeout kills Claude and anything it spawned (no orphan holding the pipes open).
+    # cwd = repo root so "--setting-sources project" loads .claude/settings.json, whose PreToolUse
+    # hook blocks WebFetch to private/local addresses (listing pages are untrusted input).
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                            text=True, start_new_session=True)
+                            text=True, start_new_session=True, cwd=str(PROJECT_DIR))
     try:
         stdout, stderr = proc.communicate(input=prompt, timeout=timeout_s)
     except subprocess.TimeoutExpired:

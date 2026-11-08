@@ -192,3 +192,10 @@ def test_run_claude_usage_missing_is_none(monkeypatch):
     fake(monkeypatch, stdout=stream({"result": "[]", "is_error": False}, searches=["q"]))
     run = run_claude("hello", claude_bin="claude")
     assert run.usage.weekly_pct is None and run.usage.total_tokens == 0
+
+
+def test_run_claude_runs_in_project_dir_so_hooks_load(monkeypatch):
+    from pathlib import Path
+    calls = fake(monkeypatch, stdout=stream({"result": "[]", "is_error": False}, searches=["q"]))
+    run_claude("hello", claude_bin="claude")
+    assert calls[0][1].kw["cwd"] == str(Path(__file__).resolve().parent.parent)
