@@ -1,0 +1,4 @@
+config/settings.env
+logs/
+__pycache__/
+.pytest_cache/
