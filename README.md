@@ -56,3 +56,17 @@ small provider-neutral API:
   search due again on a later tick (up to 3 attempts per scheduled slot).
 - `propertysearch/agent.py` (the Claude Code invocation and stream parsing) is shared with
   [floco/jobsearch](https://github.com/floco/jobsearch).
+
+## Security
+
+Listing pages are untrusted input (they could contain instructions aimed at the AI).
+Claude only gets the `WebSearch` and `WebFetch` tools: no shell, no files, and it never sees
+the My Home token, which stays in the runner process. A project hook
+(`.claude/settings.json` → `hooks/block_private_fetch.py`) refuses `WebFetch` to loopback,
+private, link-local, `.local` and unresolvable hosts, and to ambiguous URLs (userinfo,
+backslashes, encoded or numeric-shorthand hosts).
+
+Residual risk: the hook checks DNS *before* the fetch, so a domain that changes its DNS
+answer between check and fetch (DNS rebinding) could still reach a LAN address. For full
+protection, add an egress firewall rule for this machine blocking RFC 1918, loopback and
+link-local destinations for the `claude` process (or run it in a dedicated network namespace).

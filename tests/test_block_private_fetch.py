@@ -19,6 +19,15 @@ def test_private_or_bad_targets_blocked(url):
     assert is_blocked(url, resolve=lambda host: ["127.0.0.1"] if host == "localhost" else [])
 
 
+@pytest.mark.parametrize("url", [
+    "http://evil.example\\@127.0.0.1/", "http://user@public.example/", "http://pub.example%2F@127.0.0.1/",
+    "http://pub.example /x", "http://pub.example\t/x", "http://pub.example\\.127.0.0.1/",
+    "http://127.1/", "http://2130706433/", "http://0x7f000001/",
+])
+def test_ambiguous_authorities_blocked(url):
+    assert is_blocked(url, resolve=lambda host: ["93.184.216.34"])
+
+
 def test_public_host_allowed():
     assert not is_blocked("https://www.nepremicnine.net/oglasi", resolve=lambda host: ["93.184.216.34"])
 
