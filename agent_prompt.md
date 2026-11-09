@@ -50,6 +50,8 @@ End your answer with exactly one JSON object and nothing after it:
       "bedrooms": null,
       "bathrooms": null,
       "location": "town, region, country",
+      "city": "town or village name only",
+      "country": "country name in English",
       "sourceSite": "domain of the site where the listing is",
       "listingUrl": "direct link to the listing",
       "imageUrl": "direct link to the main photo, or null",
