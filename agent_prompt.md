@@ -41,7 +41,7 @@ End your answer with exactly one JSON object and nothing after it:
 {
   "listings": [
     {
-      "title": "short title in English",
+      "title": "short title in {language}",
       "type": "land | house | new_build",
       "price": 150000,
       "currency": "EUR",
@@ -51,13 +51,13 @@ End your answer with exactly one JSON object and nothing after it:
       "bathrooms": null,
       "location": "town, region, country",
       "city": "town or village name only",
-      "region": "region, province or county name",
-      "country": "country name in English",
+      "region": "region, province or county name in {language}",
+      "country": "country name in {language}",
       "sourceSite": "domain of the site where the listing is",
       "listingUrl": "direct link to the listing",
       "imageUrl": "direct link to the main photo, or null",
       "publishedAt": "YYYY-MM-DD or null",
-      "reason": "one sentence in English on why it fits the criteria"
+      "reason": "one sentence in {language} on why it fits the criteria"
     }
   ],
   "sitesQueried": ["https://every-site-you-searched-or-opened.example"]
@@ -66,6 +66,7 @@ End your answer with exactly one JSON object and nothing after it:
 
 Rules for the JSON: "type" is exactly one of land, house, new_build; numbers are plain numbers
 (no units, no thousands separators) or null when unknown; sizes are in m². "sitesQueried" lists
-every listing site you searched or opened, even those with no match.
+every listing site you searched or opened, even those with no match. Write "title", "reason",
+"region" and "country" in {language}; keep "city" as the local place name.
 
 If nothing new fits, return {"listings": [], "sitesQueried": [...]}.

@@ -8,6 +8,7 @@ from urllib.parse import urlsplit
 from .agent import AgentError
 
 REQUIRED_FIELDS = ("title", "listingUrl", "reason")
+LANGUAGES = {"en": "English", "fr": "French"}
 
 
 def build_prompt(template: str, claim: dict) -> str:
@@ -15,7 +16,8 @@ def build_prompt(template: str, claim: dict) -> str:
     seen_list = "\n".join(f"{s.get('title', '')} | {s.get('url', '')}" for s in seen) or "(none yet)"
     out = (template.replace("{today}", str(claim["today"]))
                    .replace("{max_results}", str(claim["maxResultsPerRun"]))
-                   .replace("{max_age_days}", str(claim["maxListingAgeDays"])))
+                   .replace("{max_age_days}", str(claim["maxListingAgeDays"]))
+                   .replace("{language}", LANGUAGES.get(claim.get("language") or "en", "English")))
     # Substitute the user-provided blocks last, via markers, so braces inside
     # them are never treated as placeholders.
     out = out.replace("{seen_list}", "\x00S\x00").replace("{criteria}", "\x00C\x00")
