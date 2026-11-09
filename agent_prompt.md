@@ -51,6 +51,7 @@ End your answer with exactly one JSON object and nothing after it:
       "bathrooms": null,
       "location": "town, region, country",
       "city": "town or village name only",
+      "region": "region, province or county name",
       "country": "country name in English",
       "sourceSite": "domain of the site where the listing is",
       "listingUrl": "direct link to the listing",
